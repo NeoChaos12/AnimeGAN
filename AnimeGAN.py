@@ -42,7 +42,7 @@ class AnimeGAN(object) :
         self.training_rate = args.training_rate
         self.ld = args.ld
 
-        self.img_size = args.img_size
+        self.img_size = [args.img_size, args.img_size]
         self.img_ch = args.img_ch
 
         """ Discriminator """

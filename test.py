@@ -16,7 +16,7 @@ def parse_args():
                         help='Directory name to save the checkpoints')
     parser.add_argument('--test_dir', type=str, default='dataset/test/real',
                         help='Directory name of test photos')
-    parser.add_argument('--style_name', type=str, default='S',
+    parser.add_argument('--output_dir', type=str, default='S',
                         help='what style you want to get')
 
     """checking arguments"""
@@ -28,9 +28,9 @@ def stats_graph(graph):
     # params = tf.profiler.profile(graph, options=tf.profiler.ProfileOptionBuilder.trainable_variables_parameter())
     print('FLOPs: {}'.format(flops.total_float_ops))
 
-def test(checkpoint_dir,style_name, test_dir, img_size=[256,256]):
+def test(checkpoint_dir, dataset_name, test_dir, img_size=[256, 256]):
     # tf.reset_default_graph()
-    result_dir = 'results/'+style_name
+    result_dir = 'results/' + dataset_name
     check_folder(result_dir)
     test_files = glob('{}/*.*'.format(test_dir))
 
@@ -41,7 +41,7 @@ def test(checkpoint_dir,style_name, test_dir, img_size=[256,256]):
         test_generated = generator.G_net(test_real).fake
     saver = tf.train.Saver()
 
-    gpu_options = tf.GPUOptions(allow_growth=True)
+    gpu_options = tf.GPUOptions(allow_growth=True, per_process_gpu_memory_fraction=0.8)
     with tf.Session(config=tf.ConfigProto(allow_soft_placement=True, gpu_options=gpu_options)) as sess:
         # tf.global_variables_initializer().run()
         # load model
@@ -70,4 +70,4 @@ def test(checkpoint_dir,style_name, test_dir, img_size=[256,256]):
 if __name__ == '__main__':
     arg = parse_args()
     print(arg.checkpoint_dir)
-    test(arg.checkpoint_dir, arg.style_name, arg.test_dir)
+    test(arg.checkpoint_dir, arg.output_dir, arg.test_dir)

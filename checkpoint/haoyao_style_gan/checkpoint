@@ -1,0 +1,2 @@
+model_checkpoint_path: "AnimeGAN.model-60"
+all_model_checkpoint_paths: "AnimeGAN.model-60"

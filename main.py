@@ -33,7 +33,7 @@ def parse_args():
     parser.add_argument('--training_rate', type=int, default=1, help='training rate about G & D')
     parser.add_argument('--gan_type', type=str, default='lsgan', help='[gan / lsgan / wgan-gp / wgan-lp / dragan / hinge')
 
-    parser.add_argument('--img_size', type=list, default=[256,256], help='The size of image: H and W')
+    parser.add_argument('--img_size', type=int, default=256, help='The size of image: H and W')
     parser.add_argument('--img_ch', type=int, default=3, help='The size of image channel')
 
     parser.add_argument('--ch', type=int, default=64, help='base channel number per layer')
@@ -88,7 +88,7 @@ def main():
       exit()
 
     # open session
-    gpu_options = tf.GPUOptions(allow_growth=True)
+    gpu_options = tf.GPUOptions(allow_growth=True, per_process_gpu_memory_fraction=0.8)
     with tf.Session(config=tf.ConfigProto(allow_soft_placement=True,inter_op_parallelism_threads=8,
                                intra_op_parallelism_threads=8,gpu_options=gpu_options)) as sess:
         gan = AnimeGAN(sess, args)
@@ -109,4 +109,5 @@ def main():
             print(" [*] Test finished!")
 
 if __name__ == '__main__':
+    print("Process started at path: {}".format(os.path.dirname(os.path.abspath(__file__))))
     main()
